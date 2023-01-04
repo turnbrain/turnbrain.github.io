@@ -5,8 +5,74 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <meta name="theme-color" content="#00ff00">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/intlTelInput.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas nam hic et possimus magni repudiandae quasi quae porro quos deleniti veritatis facere pariatur, aut quis, dolore rem maxime eos sed!
+    <div class="wrapper">
+        <div class="form">
+            <input type="tel" id="phone">
+            <button id="openWApp">Go to Address</button>
+        </div>
+    </div>
+
+    <script src="assets/js/intlTelInput.js"></script>
+    <script>
+    let input = document.querySelector("#phone");
+    // window.intlTelInput(input,{
+    //     // any initialisation options go here
+    // });
+
+    let inttel = window.intlTelInput(input, {
+        initialCountry: "auto",
+        geoIpLookup: function(success, failure) {
+        fetch('https://get.geojs.io/v1/ip/geo.js')
+        .then((response) => response.text())
+        .then((data) => {
+            success("us");
+            if(data && data.includes("geoip")){
+                let jsonStr = data.replace('geoip(','').replace('})','}');
+                if(isJsonString(jsonStr)){
+                    let json = JSON.parse(jsonStr);
+                    if(json.country_code){
+                        success(json.country_code);
+                    }
+                }
+            }
+            // const cc = data.match(/"country_code7":"([^"]+)"/)[1];
+            // const countryCode = data && cc ? cc : "us" ;
+            // button.html()
+            // const h = JSON.parse(data);
+            // console.log(data)
+            // success(countryCode);
+        });
+        },
+    });
+
+    function isJsonString(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
+    document.getElementById("openWApp").addEventListener("click",function(){
+        // const code = document.querySelector(".iti__country iti__standard iti__active");
+        // console.log(inttel.selectedCountryData.dialCode);
+
+        // navigator.serviceWorker.controller.postMessage({
+        //     type: 'MESSAGE_IDENTIFIER',
+        //     id: 'test',
+        // });
+    });
+
+    if("serviceWorker" in navigator){
+        navigator.serviceWorker.register("/sw.js")
+    }
+    </script>
 </body>
 </html>
