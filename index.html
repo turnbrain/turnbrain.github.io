@@ -63,6 +63,10 @@
     document.getElementById("openWApp").addEventListener("click",function(){
         // const code = document.querySelector(".iti__country iti__standard iti__active");
         console.log(inttel.selectedCountryData.dialCode);
+        const code = inttel.selectedCountryData.dialCode;
+        if(code && input.value.trim()){
+            window.location.href = "https://wa.me/"+code+input.value;
+        }
 
         // navigator.serviceWorker.controller.postMessage({
         //     type: 'MESSAGE_IDENTIFIER',
